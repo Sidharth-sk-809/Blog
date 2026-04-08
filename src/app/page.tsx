@@ -1,12 +1,7 @@
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
-import { cache } from "react";
 import { BlogShowcase } from "@/components/blog-showcase";
 import { HomeStructuredData } from "@/components/structured-data";
-import { getQueryClient } from "@/lib/query-client";
 import { getPostSummaries } from "@/lib/posts";
-
-export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Horizon Journal | Stories for builders, creators, and modern teams",
@@ -15,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Horizon Journal",
     description:
-      "A modern editorial blog experience built with Next.js, SSR, Tailwind CSS, and React Query.",
+      "A modern editorial blog experience built with Next.js, Tailwind CSS, and accessible editorial patterns.",
     type: "website",
   },
   twitter: {
@@ -26,24 +21,13 @@ export const metadata: Metadata = {
   },
 };
 
-const getInitialPosts = cache(getPostSummaries);
-
 export default async function HomePage() {
-  const queryClient = getQueryClient();
-
-  await queryClient.prefetchQuery({
-    queryKey: ["posts"],
-    queryFn: getInitialPosts,
-  });
-
-  const posts = queryClient.getQueryData<Awaited<ReturnType<typeof getPostSummaries>>>([
-    "posts",
-  ]);
+  const posts = await getPostSummaries();
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
+    <>
       <HomeStructuredData />
-      <BlogShowcase posts={posts ?? []} />
-    </HydrationBoundary>
+      <BlogShowcase posts={posts} />
+    </>
   );
 }

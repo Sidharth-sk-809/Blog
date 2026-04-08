@@ -47,7 +47,7 @@ function toSummary(post: Post): PostSummary {
   };
 }
 
-let posts: Post[] = [
+const posts: Post[] = [
   {
     slug: "designing-editorial-interfaces-for-calm-reading",
     title: "Designing editorial interfaces for calm reading",
@@ -323,79 +323,4 @@ export async function getPostBySlug(slug: string): Promise<Post | undefined> {
 
 export async function getRelatedPosts(slug: string, category: string) {
   return posts.filter((post) => post.slug !== slug && post.category === category).slice(0, 3).map(toSummary);
-}
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
-
-function createUniqueSlug(title: string) {
-  const baseSlug = slugify(title) || "untitled-story";
-  let slug = baseSlug;
-  let index = 2;
-
-  while (posts.some((post) => post.slug === slug)) {
-    slug = `${baseSlug}-${index}`;
-    index += 1;
-  }
-
-  return slug;
-}
-
-export async function createPost(input: CreatePostInput): Promise<Post> {
-  const paragraphs = input.body
-    .split(/\n\s*\n/g)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean);
-
-  const bullets = (input.bulletPoints ?? "")
-    .split("\n")
-    .map((bullet) => bullet.trim())
-    .filter(Boolean);
-
-  const post: Post = {
-    slug: createUniqueSlug(input.title),
-    title: input.title.trim(),
-    excerpt: input.excerpt.trim(),
-    category: input.category.trim(),
-    readTime: `${Math.max(4, Math.ceil(input.body.trim().split(/\s+/).length / 180))} min read`,
-    publishedAt: new Intl.DateTimeFormat("en-US", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    }).format(new Date()),
-    author: {
-      name: input.authorName.trim(),
-      role: input.authorRole.trim(),
-    },
-    coverLabel: input.coverLabel.trim(),
-    intro: input.intro.trim(),
-    isUserCreated: true,
-    sections: [
-      {
-        heading: input.sectionHeading.trim(),
-        paragraphs,
-        bullets: bullets.length ? bullets : undefined,
-      },
-    ],
-  };
-
-  posts = [post, ...posts];
-
-  return post;
-}
-
-export async function deletePost(slug: string) {
-  const post = posts.find((entry) => entry.slug === slug);
-
-  if (!post || !post.isUserCreated) {
-    return false;
-  }
-
-  posts = posts.filter((entry) => entry.slug !== slug);
-  return true;
 }

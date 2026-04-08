@@ -1,25 +1,10 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Clock3, Search, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { startTransition, useDeferredValue, useState } from "react";
 import type { PostSummary } from "@/lib/posts";
 import { cn } from "@/lib/utils";
-
-async function fetchPosts() {
-  const response = await fetch("/api/posts", {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error("Unable to load posts");
-  }
-
-  return (await response.json()) as PostSummary[];
-}
 
 function PostCard({ post, featured = false }: { post: PostSummary; featured?: boolean }) {
   return (
@@ -81,12 +66,7 @@ function PostCard({ post, featured = false }: { post: PostSummary; featured?: bo
 export function BlogShowcase({ posts: initialPosts }: { posts: PostSummary[] }) {
   const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
-
-  const { data = initialPosts } = useQuery({
-    queryKey: ["posts"],
-    queryFn: fetchPosts,
-    initialData: initialPosts,
-  });
+  const data = initialPosts;
 
   const normalizedQuery = deferredQuery.trim().toLowerCase();
   const filteredPosts = normalizedQuery
