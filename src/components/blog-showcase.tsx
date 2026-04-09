@@ -1,11 +1,11 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, Clock3, Search, Sparkles } from "lucide-react";
+import { Clock3, Search } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { startTransition, useDeferredValue, useState } from "react";
 import type { PostSummary } from "@/lib/posts";
-import { cn } from "@/lib/utils";
 
 async function fetchPosts() {
   const response = await fetch("/api/posts", {
@@ -21,57 +21,114 @@ async function fetchPosts() {
   return (await response.json()) as PostSummary[];
 }
 
-function PostCard({ post, featured = false }: { post: PostSummary; featured?: boolean }) {
+function Navbar() {
   return (
-    <article
-      className={cn(
-        "glass-card group rounded-[2rem] p-6 md:p-7",
-        featured ? "relative overflow-hidden" : "h-full",
-      )}
+    <header className="flex flex-col gap-5 border-b border-slate-200/80 px-6 py-5 md:flex-row md:items-center md:justify-between md:px-10">
+      <div className="flex items-center gap-3">
+        <div className="flex size-10 items-center justify-center rounded-full bg-slate-900 text-sm font-bold text-white">
+          UI
+        </div>
+        <div>
+          <p className="text-lg font-bold tracking-tight text-slate-900">Beyond UI</p>
+          <p className="text-sm text-slate-500">Editorial insights for digital teams</p>
+        </div>
+      </div>
+      <nav
+        aria-label="Primary"
+        className="flex flex-wrap items-center gap-3 text-sm font-medium text-slate-600"
+      >
+        <a href="#" className="rounded-full px-3 py-2 hover:bg-slate-100 hover:text-slate-900">Homepage</a>
+        <a href="#" className="rounded-full px-3 py-2 hover:bg-slate-100 hover:text-slate-900">About us</a>
+        <a href="#featured" className="rounded-full px-3 py-2 hover:bg-slate-100 hover:text-slate-900">Features</a>
+        <a href="#recent" className="rounded-full px-3 py-2 hover:bg-slate-100 hover:text-slate-900">Blog</a>
+        <a href="/write" className="rounded-full px-3 py-2 hover:bg-slate-100 hover:text-slate-900">Contact us</a>
+        <button className="rounded-full border border-slate-200 px-4 py-2 text-slate-700">Demo</button>
+        <Link
+          href="/write"
+          className="rounded-full bg-slate-900 px-4 py-2 text-white hover:bg-slate-700"
+        >
+          Get Started
+        </Link>
+      </nav>
+    </header>
+  );
+}
+
+function FeaturedStory({ post }: { post: PostSummary }) {
+  return (
+    <Link
+      href={`/posts/${post.slug}`}
+      className="group relative block overflow-hidden rounded-[24px]"
+      aria-label={`Open featured post ${post.title}`}
     >
-      {featured ? (
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,193,108,0.4),transparent_28%),linear-gradient(135deg,rgba(189,93,56,0.08),transparent_55%)]"
+      <Image
+        src={post.image}
+        alt={post.title}
+        width={1200}
+        height={800}
+        className="h-[300px] w-full object-cover md:h-[420px]"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
+        <span className="inline-flex rounded-full border border-white/20 bg-black/35 px-3 py-1 text-xs font-semibold text-white">
+          {post.category}
+        </span>
+        <h1 className="mt-3 max-w-xl text-balance text-3xl font-semibold leading-tight text-white md:text-[2.6rem]">
+          {post.title}
+        </h1>
+        <p className="mt-3 max-w-2xl text-sm leading-7 text-white/80 md:text-base">{post.excerpt}</p>
+      </div>
+    </Link>
+  );
+}
+
+function SidebarPost({ post }: { post: PostSummary }) {
+  return (
+    <Link
+      href={`/posts/${post.slug}`}
+      className="flex items-center gap-4 rounded-[20px] border border-transparent p-2 hover:border-slate-200 hover:bg-slate-50"
+    >
+      <Image
+        src={post.image}
+        alt={post.title}
+        width={64}
+        height={64}
+        className="h-16 w-16 rounded-[16px] object-cover"
+      />
+      <div className="min-w-0">
+        <p className="line-clamp-2 text-sm font-semibold leading-6 text-slate-900">{post.title}</p>
+        <p className="mt-1 text-xs text-slate-500">{post.category}</p>
+      </div>
+    </Link>
+  );
+}
+
+function RecentPostCard({ post }: { post: PostSummary }) {
+  return (
+    <article className="group">
+      <Link href={`/posts/${post.slug}`} className="block">
+        <Image
+          src={post.image}
+          alt={post.title}
+          width={720}
+          height={460}
+          className="h-56 w-full rounded-[20px] object-cover"
         />
-      ) : null}
-      <div className="relative flex h-full flex-col gap-5">
-        <div className="flex flex-wrap items-center gap-3 text-sm text-muted">
-          <span className="rounded-full border border-line-strong bg-white/70 px-3 py-1 font-semibold tracking-[0.18em] uppercase">
-            {post.category}
-          </span>
-          <span className="inline-flex items-center gap-1.5">
+      </Link>
+      <div className="mt-4 space-y-3">
+        <Link href={`/posts/${post.slug}`}>
+          <h2 className="text-balance text-[1.75rem] font-semibold leading-10 tracking-[-0.03em] text-slate-900 group-hover:text-slate-700">
+            {post.title}
+          </h2>
+        </Link>
+        <p className="line-clamp-2 text-sm leading-7 text-slate-500">{post.excerpt}</p>
+        <div className="flex items-center gap-2 text-sm text-slate-500">
+          <span className="font-medium text-slate-700">{post.author.name}</span>
+          <span>•</span>
+          <span className="inline-flex items-center gap-1">
             <Clock3 className="size-4" />
             {post.readTime}
           </span>
-        </div>
-        <div className="space-y-3">
-          <p className="text-sm font-semibold tracking-[0.32em] uppercase text-accent">
-            {post.publishedAt}
-          </p>
-          <h2
-            className={cn(
-              "display-text text-balance text-3xl leading-tight text-foreground",
-              featured ? "max-w-2xl text-4xl md:text-6xl" : "text-3xl",
-            )}
-          >
-            {post.title}
-          </h2>
-          <p className="max-w-2xl text-base leading-8 text-muted md:text-lg">{post.excerpt}</p>
-        </div>
-        <div className="mt-auto flex items-center justify-between gap-4 border-t border-line pt-5">
-          <div>
-            <p className="font-semibold">{post.author.name}</p>
-            <p className="text-sm text-muted">{post.author.role}</p>
-          </div>
-          <Link
-            href={`/posts/${post.slug}`}
-            className="inline-flex items-center gap-2 rounded-full border border-line-strong bg-[#20160f] px-5 py-3 text-sm font-semibold text-white hover:-translate-y-0.5 hover:bg-accent-strong"
-            aria-label={`Read ${post.title}`}
-          >
-            Read story
-            <ArrowRight className="size-4" />
-          </Link>
         </div>
       </div>
     </article>
@@ -97,135 +154,98 @@ export function BlogShowcase({ posts: initialPosts }: { posts: PostSummary[] }) 
     : data;
 
   const featuredPost = filteredPosts[0];
-  const secondaryPosts = filteredPosts.slice(1);
+  const sidebarPosts = filteredPosts.slice(1, 6);
+  const recentPosts = filteredPosts.slice(1, 4);
 
   return (
-    <main
-      id="content"
-      className="editorial-shell min-h-screen px-4 py-6 text-foreground md:px-8 md:py-8"
-    >
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
-        <section className="hero-fade glass-card overflow-hidden rounded-[2rem] px-6 py-8 md:px-10 md:py-10">
-          <div className="grid gap-10 lg:grid-cols-[1.35fr_0.8fr] lg:items-end">
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full border border-line-strong bg-white/70 px-4 py-2 text-sm font-semibold tracking-[0.2em] uppercase text-accent">
-                <Sparkles className="size-4" />
-                Editorial Notes
-              </div>
-              <div className="space-y-5">
-                <p className="text-sm font-semibold tracking-[0.38em] uppercase text-muted">
-                  Thoughtful reads for digital teams
-                </p>
-                <h1 className="display-text max-w-4xl text-balance text-5xl leading-none md:text-7xl">
-                  A warm, tactile blog crafted for modern storytelling.
-                </h1>
-                <p className="max-w-2xl text-base leading-8 text-muted md:text-lg">
-                  Horizon Journal pairs long-form writing with a magazine-inspired interface so readers can
-                  move from discovery to deep reading without friction.
-                </p>
-                <div className="flex flex-wrap gap-3">
-                  <Link
-                    href="/write"
-                    className="inline-flex items-center gap-2 rounded-full bg-[#20160f] px-5 py-3 text-sm font-semibold text-white hover:-translate-y-0.5 hover:bg-accent-strong"
-                  >
-                    Write a story
-                    <ArrowRight className="size-4" />
-                  </Link>
-                  <a
-                    href="#archive"
-                    className="inline-flex items-center gap-2 rounded-full border border-line-strong bg-white/70 px-5 py-3 text-sm font-semibold text-foreground hover:-translate-y-0.5"
-                  >
-                    Browse archive
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="stagger-1 grid gap-4 rounded-[1.75rem] border border-line bg-white/65 p-5">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-[1.5rem] bg-[#20160f] p-4 text-white">
-                  <p className="text-sm uppercase tracking-[0.2em] text-white/70">Stories</p>
-                  <p className="mt-3 text-4xl font-semibold">{data.length}</p>
-                </div>
-                <div className="rounded-[1.5rem] bg-sage p-4">
-                  <p className="text-sm uppercase tracking-[0.2em] text-foreground/70">Topics</p>
-                  <p className="mt-3 text-4xl font-semibold">5</p>
-                </div>
-              </div>
-              <div className="rounded-[1.5rem] border border-dashed border-line-strong bg-[#fffaf3] p-4">
-                <p className="text-sm uppercase tracking-[0.2em] text-muted">Built with</p>
-                <p className="mt-2 text-lg font-semibold text-foreground">Next.js SSR, React Query, Tailwind CSS</p>
-              </div>
-            </div>
-          </div>
-        </section>
+    <main id="content" className="min-h-screen bg-[#d4d5db] p-3 md:p-5">
+      <div className="mx-auto max-w-[1240px] overflow-hidden rounded-[28px] border border-slate-300/70 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.12)]">
+        <Navbar />
 
-        <section className="stagger-2 glass-card rounded-[2rem] px-6 py-5 md:px-7">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="space-y-10 px-6 py-8 md:px-10 md:py-10">
+          <section className="flex flex-col gap-6 xl:flex-row" id="featured">
+            <div className="min-w-0 flex-1">
+              {featuredPost ? (
+                <FeaturedStory post={featuredPost} />
+              ) : (
+                <div className="flex h-[320px] items-center justify-center rounded-[24px] border border-slate-200 bg-slate-50 text-center">
+                  <div>
+                    <h2 className="text-2xl font-semibold text-slate-900">No posts found</h2>
+                    <p className="mt-2 text-sm text-slate-500">Try a different search term.</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <aside className="w-full xl:max-w-[340px]">
+              <div className="rounded-[24px] border border-slate-200 bg-white p-1">
+                <div className="flex items-center justify-between px-4 py-3">
+                  <h2 className="text-[1.7rem] font-semibold tracking-[-0.04em] text-slate-900">
+                    Other featured posts
+                  </h2>
+                </div>
+                <div className="space-y-1 px-1 pb-2">
+                  {sidebarPosts.map((post) => (
+                    <SidebarPost key={post.slug} post={post} />
+                  ))}
+                </div>
+              </div>
+            </aside>
+          </section>
+
+          <section className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-sm font-semibold tracking-[0.32em] uppercase text-muted">Search the archive</p>
-              <p className="mt-1 text-sm text-muted">
-                Filter instantly by title, topic, excerpt, or author.
+              <h2 className="text-[2rem] font-semibold tracking-[-0.04em] text-slate-900">Recent Posts</h2>
+              <p aria-live="polite" className="mt-1 text-sm text-slate-500">
+                Showing {filteredPosts.length} {filteredPosts.length === 1 ? "post" : "posts"}
+                {normalizedQuery ? ` for "${deferredQuery}"` : ""}.
               </p>
             </div>
-            <label className="relative block w-full md:max-w-md">
-              <span className="sr-only">Search articles</span>
-              <Search className="pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2 text-muted" />
-              <input
-                type="search"
-                value={query}
-                onChange={(event) => {
-                  const nextQuery = event.target.value;
-                  startTransition(() => {
-                    setQuery(nextQuery);
-                  });
-                }}
-                placeholder="Search by title, author, or category"
-                className="w-full rounded-full border border-line-strong bg-white/85 py-3 pr-5 pl-12 text-sm outline-none placeholder:text-muted"
-              />
-            </label>
-          </div>
-          <p
-            aria-live="polite"
-            className="mt-4 text-sm text-muted"
-          >
-            Showing {filteredPosts.length} {filteredPosts.length === 1 ? "story" : "stories"}
-            {normalizedQuery ? ` for “${deferredQuery}”` : ""}.
-          </p>
-        </section>
 
-        {featuredPost ? (
-          <section className="stagger-3">
-            <PostCard
-              post={featuredPost}
-              featured
-            />
-          </section>
-        ) : (
-          <section className="glass-card rounded-[2rem] p-10 text-center">
-            <h2 className="display-text text-3xl">No stories matched your search.</h2>
-            <p className="mt-3 text-muted">Try a different keyword to uncover more articles.</p>
-          </section>
-        )}
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <label className="relative block min-w-[280px]">
+                <span className="sr-only">Search articles</span>
+                <Search className="pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="search"
+                  value={query}
+                  onChange={(event) => {
+                    const nextQuery = event.target.value;
+                    startTransition(() => {
+                      setQuery(nextQuery);
+                    });
+                  }}
+                  placeholder="Search posts"
+                  className="w-full rounded-full border border-slate-200 bg-white py-3 pr-5 pl-12 text-sm text-slate-700 outline-none placeholder:text-slate-400"
+                />
+              </label>
 
-        {secondaryPosts.length ? (
-          <section
-            id="archive"
-            aria-label="Article list"
-            className="grid gap-5 md:grid-cols-2 xl:grid-cols-3"
-          >
-            {secondaryPosts.map((post, index) => (
-              <div
-                key={post.slug}
-                className={cn(
-                  index % 3 === 0 ? "md:-mt-6" : "",
-                  index % 3 === 1 ? "xl:mt-10" : "",
-                )}
+              <Link
+                href="/write"
+                className="inline-flex items-center justify-center rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
               >
-                <PostCard post={post} />
-              </div>
-            ))}
+                All Posts
+              </Link>
+            </div>
           </section>
-        ) : null}
+
+          {recentPosts.length ? (
+            <section
+              id="recent"
+              aria-label="Recent post grid"
+              className="grid gap-8 md:grid-cols-2 xl:grid-cols-3"
+            >
+              {recentPosts.map((post) => (
+                <RecentPostCard key={post.slug} post={post} />
+              ))}
+            </section>
+          ) : (
+            <section className="rounded-[24px] border border-slate-200 bg-slate-50 px-6 py-16 text-center">
+              <h2 className="text-2xl font-semibold text-slate-900">No recent posts available</h2>
+              <p className="mt-2 text-sm text-slate-500">Create a new article or reset the search to see more.</p>
+            </section>
+          )}
+        </div>
       </div>
     </main>
   );

@@ -5,6 +5,7 @@ export type PostSummary = {
   category: string;
   readTime: string;
   publishedAt: string;
+  image: string;
   author: {
     name: string;
     role: string;
@@ -43,6 +44,7 @@ function toSummary(post: Post): PostSummary {
     category: post.category,
     readTime: post.readTime,
     publishedAt: post.publishedAt,
+    image: post.image,
     author: post.author,
   };
 }
@@ -56,6 +58,8 @@ let posts: Post[] = [
     category: "Design Systems",
     readTime: "6 min read",
     publishedAt: "April 4, 2026",
+    image:
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
     author: {
       name: "Nina Porter",
       role: "Editorial Design Lead",
@@ -101,6 +105,8 @@ let posts: Post[] = [
     category: "Engineering",
     readTime: "8 min read",
     publishedAt: "April 2, 2026",
+    image:
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
     author: {
       name: "Avery Chen",
       role: "Frontend Engineer",
@@ -140,6 +146,8 @@ let posts: Post[] = [
     category: "Operations",
     readTime: "5 min read",
     publishedAt: "March 29, 2026",
+    image:
+      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
     author: {
       name: "Mila Santos",
       role: "Content Strategist",
@@ -172,6 +180,8 @@ let posts: Post[] = [
     category: "UX",
     readTime: "4 min read",
     publishedAt: "March 25, 2026",
+    image:
+      "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1200&q=80",
     author: {
       name: "Rowan Blake",
       role: "Product Designer",
@@ -203,6 +213,8 @@ let posts: Post[] = [
     category: "SEO",
     readTime: "7 min read",
     publishedAt: "March 21, 2026",
+    image:
+      "https://images.unsplash.com/photo-1497366412874-3415097a27e7?auto=format&fit=crop&w=1200&q=80",
     author: {
       name: "Iris Kim",
       role: "Technical SEO Editor",
@@ -234,6 +246,8 @@ let posts: Post[] = [
     category: "Brand",
     readTime: "5 min read",
     publishedAt: "March 18, 2026",
+    image:
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=80",
     author: {
       name: "Theo Grant",
       role: "Brand Designer",
@@ -259,6 +273,8 @@ let posts: Post[] = [
     category: "Growth",
     readTime: "6 min read",
     publishedAt: "March 15, 2026",
+    image:
+      "https://images.unsplash.com/photo-1487014679447-9f8336841d58?auto=format&fit=crop&w=1200&q=80",
     author: {
       name: "June Ellis",
       role: "Audience Growth Lead",
@@ -284,6 +300,8 @@ let posts: Post[] = [
     category: "React",
     readTime: "7 min read",
     publishedAt: "March 12, 2026",
+    image:
+      "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1200&q=80",
     author: {
       name: "Sage Monroe",
       role: "Senior React Developer",
@@ -368,6 +386,8 @@ export async function createPost(input: CreatePostInput): Promise<Post> {
       day: "numeric",
       year: "numeric",
     }).format(new Date()),
+    image:
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
     author: {
       name: input.authorName.trim(),
       role: input.authorRole.trim(),
