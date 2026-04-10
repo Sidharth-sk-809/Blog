@@ -61,7 +61,7 @@ export default async function PostPage({
   return (
     <main
       id="content"
-      className="editorial-shell min-h-screen px-4 py-6 md:px-8 md:py-8"
+      className="editorial-shell min-h-screen px-3 py-4 sm:px-4 md:px-8 md:py-8"
     >
       <ArticleStructuredData
         title={post.title}
@@ -70,34 +70,34 @@ export default async function PostPage({
         author={post.author.name}
         slug={post.slug}
       />
-      <div className="mx-auto flex max-w-6xl flex-col gap-6">
+      <div className="mx-auto flex max-w-6xl flex-col gap-4 sm:gap-6">
         <Link
           href="/"
-          className="inline-flex w-fit items-center gap-2 rounded-full border border-line-strong bg-white/70 px-4 py-2 text-sm font-semibold text-foreground hover:-translate-y-0.5"
+          className="inline-flex w-fit items-center gap-2 rounded-full border border-line-strong bg-white/70 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-foreground hover:-translate-y-0.5"
         >
-          <ArrowLeft className="size-4" />
+          <ArrowLeft className="size-3 sm:size-4" />
           Back to stories
         </Link>
 
-        <article className="glass-card overflow-hidden rounded-[2rem]">
-          <div className="border-b border-line px-6 py-8 md:px-10 md:py-10">
-            <div className="flex flex-wrap items-center gap-3 text-sm text-muted">
-              <span className="rounded-full border border-line-strong bg-white/80 px-3 py-1 font-semibold tracking-[0.18em] uppercase">
+        <article className="glass-card overflow-hidden rounded-lg sm:rounded-xl md:rounded-[2rem]">
+          <div className="border-b border-line px-4 py-6 sm:px-6 sm:py-8 md:px-10 md:py-10">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-muted">
+              <span className="rounded-full border border-line-strong bg-white/80 px-2 sm:px-3 py-1 text-xs font-semibold tracking-[0.18em] uppercase">
                 {post.category}
               </span>
               <span>{post.publishedAt}</span>
-              <span className="inline-flex items-center gap-1.5">
-                <Clock3 className="size-4" />
+              <span className="inline-flex items-center gap-1 sm:gap-1.5">
+                <Clock3 className="size-3 sm:size-4" />
                 {post.readTime}
               </span>
             </div>
 
-            <div className="mt-7 grid gap-8 lg:grid-cols-[1.3fr_0.65fr]">
+            <div className="mt-4 sm:mt-6 md:mt-7 grid gap-6 md:gap-8 lg:grid-cols-[1.3fr_0.65fr]">
               <div>
-                <p className="text-sm font-semibold tracking-[0.32em] uppercase text-accent">
+                <p className="text-xs font-semibold tracking-[0.32em] uppercase text-accent">
                   {post.coverLabel}
                 </p>
-                <h1 className="display-text mt-4 max-w-4xl text-balance text-5xl leading-none md:text-7xl">
+                <h1 className="display-text mt-2 sm:mt-3 md:mt-4 max-w-4xl text-balance text-3xl sm:text-4xl md:text-5xl md:text-7xl leading-none">
                   {post.title}
                 </h1>
                 <p className="mt-6 max-w-3xl text-lg leading-8 text-muted">{post.intro}</p>
