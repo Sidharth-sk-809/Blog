@@ -2,10 +2,16 @@ import { ArrowLeft, ArrowRight, Clock3 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { DeletePostButton } from "@/components/delete-post-button";
 import { ArticleStructuredData } from "@/components/structured-data";
-import { deletePostAction } from "@/app/posts/[slug]/actions";
-import { getPostBySlug, getRelatedPosts } from "@/lib/posts";
+import { getPostBySlug, getPostSummaries, getRelatedPosts } from "@/lib/posts";
+
+export async function generateStaticParams() {
+  const posts = await getPostSummaries();
+
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
 
 export async function generateMetadata({
   params,
@@ -51,7 +57,6 @@ export default async function PostPage({
   }
 
   const relatedPosts = await getRelatedPosts(post.slug, post.category);
-  const deleteAction = deletePostAction.bind(null, post.slug);
 
   return (
     <main
@@ -163,7 +168,6 @@ export default async function PostPage({
         </article>
 
         <div className="flex flex-wrap items-center justify-end gap-3">
-          {post.isUserCreated ? <DeletePostButton action={deleteAction} /> : null}
           <Link
             href="/"
             className="inline-flex items-center gap-2 rounded-full bg-[#20160f] px-5 py-3 text-sm font-semibold text-white hover:bg-accent-strong"

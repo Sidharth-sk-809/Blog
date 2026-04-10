@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { WritePostForm } from "@/components/write-post-form";
 
 export const metadata: Metadata = {
   title: "Write a Story",
@@ -45,10 +44,19 @@ export default function WritePage() {
           <div className="mb-6">
             <p className="text-sm font-semibold tracking-[0.32em] uppercase text-muted">New story</p>
             <p className="mt-2 text-sm leading-7 text-muted">
-              Fill out the form below to create a post. Required fields are validated before publishing.
+              GitHub Pages can only host a static export, so publishing is disabled in this deployment.
+              This page remains as a drafting reference for the story fields used by the demo.
             </p>
           </div>
-          <WritePostForm />
+          <div className="grid gap-5">
+            <div className="rounded-[1.25rem] border border-line-strong bg-white/85 px-4 py-3 text-sm text-foreground/80">
+              Author details, title, category, excerpt, intro, and article body are all part of the content model.
+            </div>
+            <div className="rounded-[1.25rem] border border-dashed border-line-strong bg-[#fffaf3] p-6 text-sm leading-7 text-muted">
+              If you want to re-enable publishing later, the app needs a real backend or a different deployment
+              target than GitHub Pages.
+            </div>
+          </div>
         </section>
       </div>
     </main>

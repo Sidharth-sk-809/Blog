@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Manrope, Playfair_Display } from "next/font/google";
-import { QueryProvider } from "@/components/query-provider";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -21,7 +20,7 @@ export const metadata: Metadata = {
     template: "%s | Horizon Journal",
   },
   description:
-    "A polished editorial blog built with modern Next.js patterns, server rendering, and accessible design.",
+    "A polished editorial blog built with modern Next.js patterns and accessible design.",
   applicationName: "Horizon Journal",
   category: "technology",
 };
@@ -43,7 +42,7 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <QueryProvider>{children}</QueryProvider>
+        {children}
       </body>
     </html>
   );
