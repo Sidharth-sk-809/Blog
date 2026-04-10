@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Playfair_Display } from "next/font/google";
+import { QueryProvider } from "@/components/query-provider";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -42,7 +43,9 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        {children}
+        <QueryProvider>
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );
